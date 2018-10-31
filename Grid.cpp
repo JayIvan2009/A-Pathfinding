@@ -12,11 +12,6 @@ Grid::Grid(sf::Vector2f &dimensions)
 
 	size.x = pow(this->dimensions.x * i * 2, 2);
 	size.y = pow(this->dimensions.x * i * 2, 2);
-	std::cout << i << std::endl;
-	std::cout << gridCount << std::endl;
-	std::cout << grid.size() << std::endl;
-	std::cout << size.x << std::endl;
-	std::cout << size.y << std::endl;
 }
 
 Grid::Grid() {
@@ -71,56 +66,52 @@ void Grid::showGrid(sf::RenderWindow &window) {
 }
 
 void Grid::run(sf::RenderWindow &window) {
-	Node firstNode[8], nextNode;
-	float posX[8] = { 0.0, 100.0, 0.0, -100.0, -100.0, 100.0, 100.0, -100.0 };
-	float posY[8] = { -100.0, 0.0, 100.0, 0.0, -100.0, -100.0, 100.0, 100.0};
-	float min = 0.0;
-	bool found = false;
-	nextNode = start;
-	//std::unordered_map<Node, sf::Vector2f> { {firstNode[0], position[0]}};
+	Node neighbourNode[8];
+	bool set = true;
+	bool initial = true;
+	bool init = true;
+	baseNode = start;
 
 	//while (!found) {
-		/*if (firstNode.getBounds() == end.getBounds()) {
-			found = true;
-			//break;
-		}*/
-		//else {
-	for (int l = 0; l < 30; l++) {
-		for (int i = 0; i < 8; i++) {
-			firstNode[i] = nextNode;
-			sf::Vector2f tempLocation(firstNode[i].getLocationX() + posX[i], firstNode[i].getLocationY() + posY[i]);
-			firstNode[i].setLocation(tempLocation);
-			float tempPosX = tempLocation.x;
-			float tempPosY = tempLocation.y;
-			std::cout << tempPosX << " " << tempPosY << std::endl;
-			for (int k = 0; k < node.size(); k++) {
-				if (node[k]->getBounds().contains(tempPosX, tempPosY)) {
-					//	if (node[i]->getOpen()) {
-					node[k]->setColor();
-					node[k]->setGHF(*&start.getPosition(), *&end.getPosition(), node);
-					if (!found) {
-						min = node[k]->getF();
-						found = true;
-					}
-					if (min > node[k]->getF()) {
-						min = node[k]->getF();
-						nextNode = *node[k];
-					}
-					//break;
-				}
-			}
-		}
+	while (!found) {
+		findNeighbours(neighbourNode);
 	}
 }
 
-void Grid::calcG() {
-	
-}
-
-void Grid::calcH() {
-
-}
-
-void Grid::calcF() {
-
+void Grid::findNeighbours(Node neighbourNode[]) {
+	bool set = true;
+	int j = 0;
+	for (int i = 0; i < 8; i++) {
+		neighbourNode[i] = baseNode;
+		sf::Vector2f tempLocation(neighbourNode[i].getLocationX() + posX[i], neighbourNode[i].getLocationY() + posY[i]);
+		neighbourNode[i].setLocation(tempLocation);
+		float tempPosX = tempLocation.x;
+		float tempPosY = tempLocation.y;
+		for (int k = 0; k < node.size(); k++) {
+			if (node[k]->getBounds().contains(tempPosX, tempPosY)) {
+				if (node[k]->getBounds().contains(end.getLocationX(), end.getLocationY())) {
+					std::cout << "Found End!" << std::endl;
+					found = true;
+					return;
+				}
+				if (node[k]->getOpen() && !node[k]->getEnd()) {
+					node[k]->setColor();
+					node[k]->setGHF(*&start.getPosition(), *&end.getPosition(), node);
+					if (set) {
+						min = node[k]->getF();
+						set = false;
+					}
+					if (min >= node[k]->getF()) {
+						min = node[k]->getF();
+						j = k;
+						break;
+					}
+					break;
+				}
+				break;
+			}
+		}
+	}
+	node[j]->setPath();
+	baseNode = *node[j];
 }

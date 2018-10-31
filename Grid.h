@@ -29,9 +29,7 @@ public:
 	size_t getOpenNode() { return node.size(); };
 
 	void run(sf::RenderWindow &window);
-	void calcG();
-	void calcH();
-	void calcF();
+	void findNeighbours(Node neighbourNode[]);
 
 private:
 	sf::RenderWindow window;
@@ -41,13 +39,19 @@ private:
 protected:
 	sf::Vector2f dimensions;
 	std::vector<Node*> node;
-	std::vector<Node*> closed;
+	std::vector<Node*> openNode;
+	std::vector<Node*> closedNode;
 	Node start;
 	Node end;
+	Node baseNode;
 	std::vector<sf::RectangleShape> grid;
 	std::vector<sf::Vector2f*> location;
 	sf::Vector2f size;
 	int gridCount;
 	bool found = false;
+	float min = 0.0;
+
+	const float posX[8] = { 0.0, 100.0, 0.0, -100.0, -100.0, 100.0, 100.0, -100.0 };
+	const float posY[8] = { -100.0, 0.0, 100.0, 0.0, -100.0, -100.0, 100.0, 100.0 };
 };
 

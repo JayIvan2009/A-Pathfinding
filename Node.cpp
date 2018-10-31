@@ -18,10 +18,6 @@ Node::~Node()
 {
 }
 
-void Node::setOpen() {
-
-}
-
 void Node::showNode(sf::RenderWindow &window) {
 	window.draw(node);
 	/* for (int i = 0; i < gridCount; i++) {
@@ -76,9 +72,16 @@ void Node::setColor() {
 	node.setFillColor(sf::Color::Color(0, 255, 0, 125));
 }
 
+void Node::setPath() {
+	isOpen = false;
+	node.setFillColor(sf::Color::Color(0, 255, 255, 125));
+	GText.setFillColor(sf::Color::Color(0, 128, 128));
+	HText.setFillColor(sf::Color::Color(0, 128, 128));
+	FText.setFillColor(sf::Color::Color(0, 128, 128));
+
+}
+
 void Node::setGHF(sf::Vector2f &start, sf::Vector2f &end, std::vector<Node*> &nodeSize) {
-	std::cout << end.y << " " << location.y << " " << end.x << " " << location.x << std::endl;
-	std::cout << start.y << " " << location.y << " " << start.x << " " << location.x << std::endl;
 	G = sqrt(pow(end.x - location.x, 2) + pow(end.y - location.y, 2));
 	H = sqrt(pow(start.x - location.x, 2) + pow(start.y - location.y, 2));
 	F = H + G;
@@ -100,7 +103,4 @@ void Node::setGHF(sf::Vector2f &start, sf::Vector2f &end, std::vector<Node*> &no
 	FText.setPosition(node.getPosition().x + node.getSize().x * .4, node.getPosition().y + node.getSize().x * .55);
 	FText.setCharacterSize(20);
 	FText.setFillColor(sf::Color::Color(0, 175, 0));
-		
-	std::cout << "G: " << G << " " << "H: " << H<<  std::endl;
-	std::cout << "F: " << F << std::endl;
 }

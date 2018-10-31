@@ -10,7 +10,7 @@ public:
 	Node(sf::Vector2f location, sf::Vector2f size, int gridCount);
 	Node();
 	~Node();
-	void setOpen();
+	void setOpen() { isOpen = false; };
 	void showNode(sf::RenderWindow &window);
 	void showText(sf::RenderWindow &window);
 	void setStart();
@@ -21,6 +21,7 @@ public:
 	void setLocation(sf::Vector2f locaton) { this->location = location; };
 	void setColor();
 	void setTest() { node.setFillColor(sf::Color::Blue); };
+	void setPath();
 
 	bool getOpen() { return isOpen; };
 	bool getEnd() { return isEnd; };
@@ -30,10 +31,6 @@ public:
 	float getLocationY() { return location.y; };
 	sf::Vector2f getPosition() { return location; };
 	int getF() { return F; };
-
-	void show() {
-		std::cout << location.x << " " << location.y << std::endl;
-	}
 
 private:
 	int G, H, F;
